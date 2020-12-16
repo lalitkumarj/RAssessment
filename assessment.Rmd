@@ -1,0 +1,99 @@
+---
+title: "R Assessment"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this Assessment we will analyze a dataset of ad impressions. Each entry in this dataset is an impression id, information about the customer and 
+
+## Setting Up 
+
+1. Install RStudio on your computer. Create a directory named ``Assessment`` somewhere on your computer and add an empty file named ``answers.R`` in it. Switch to that directory in RStudio and set the directory as your current working directory. Upload an image. 
+
+2. Clear all variables in the workspace. It's best to do this before any project.
+```{r}
+rm(list=ls())
+```
+
+
+3. In this exercise we will need the ``dplyr`` library. Install this package if you don't have it, otherwise load it. 
+
+```{r}
+library('dplyr')
+```
+4. Load the file ``data1.csv`` into the dataframe ``ads``. 
+
+```{r}
+ads <- read.csv('data1.csv')
+```
+
+## Basic Data Analysis
+
+4. What are the column names of this dataset?
+```{r}
+colnames(ads)
+```
+
+5. How may rows does the dataset have?
+```{r}
+nrow(ads)
+```
+
+
+6. Give an initial summary of the dataset.
+```{r}
+summary(ads)
+```
+
+7. Count up the total number of conversions over all ads.
+```{r}
+sum(ads$conversion)
+```
+
+8. Filter our all impressions from the ``display`` channel that cost over $1. Save the result in the datatable ``expensive.ads``
+
+```{r}
+expensive.ads<- ads[(ads$cost > 1)& (ads$channel=='display'),]
+```
+
+
+9. For the ads in the previous question, what was the total spent?
+```{r}
+sum(expensive.ads$cost)
+```
+
+## Datatable Manipulation
+
+9. Some impression id's are duplicated. Remove the duplicates.
+
+10. Add a column which for each ad represents the profit. Compute the total profit.
+
+```{r}
+ads$profit <- ads$revenue - ads$cost
+sum(ads$profit)
+```
+
+11. Create a new dataframe that for each channel shows the total impressions, total conversions, and total cost.
+
+```{r}
+channel.per <- ads %>% group_by(channel) %>% summarise(total.impressions=n(), total.conversions=sum(conversion), total.cost=sum(cost))
+print(channel.per)
+```
+
+12. Something about merging?
+
+## Modeling
+
+10. Something about lm and glm
+
+
+## Plotting
+
+<!--```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.-->
