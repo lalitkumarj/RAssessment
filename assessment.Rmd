@@ -121,6 +121,14 @@ reg2 <- glm(conversion~type, data=merged, family='binomial')
 summary(reg2)
 ```
 
+17. Perform a t-test between the conversions of the ad with type A and the ad with type B. What's the p-value?
+```{r}
+adA <- merged[merged$type=='A',]
+adB <- merged[merged$type=='B',]
+t.test(adA$conversion,adB$conversion)
+```
+
+
 ## Plotting
 
 13. Plot the ages of customers against their revenue along with the regression line you learned above.

@@ -598,6 +598,23 @@ summary(reg2)</code></pre>
 ## AIC: 975.39
 ## 
 ## Number of Fisher Scoring iterations: 4</code></pre>
+<ol start="17" style="list-style-type: decimal">
+<li>Perform a t-test between the conversions of the ad with type A and the ad with type B. What’s the p-value?</li>
+</ol>
+<pre class="r"><code>adA &lt;- merged[merged$type==&#39;A&#39;,]
+adB &lt;- merged[merged$type==&#39;B&#39;,]
+t.test(adA$conversion,adB$conversion)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  adA$conversion and adB$conversion
+## t = -0.22646, df = 662.59, p-value = 0.8209
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.06616433  0.05248066
+## sample estimates:
+## mean of x mean of y 
+## 0.1826625 0.1895044</code></pre>
 </div>
 <div id="plotting" class="section level2">
 <h2>Plotting</h2>
