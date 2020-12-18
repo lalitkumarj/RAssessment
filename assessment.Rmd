@@ -1,9 +1,12 @@
 ---
 title: "R Assessment"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
+options(warn = -1) 
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -19,12 +22,13 @@ rm(list=ls())
 ```
 
 
-3. In this exercise we will need the ``dplyr`` library. Install this package if you don't have it, otherwise load it. 
+3. In this exercise we will need the ``dplyr`` and ``ggplot2`` libraries. Install these packages if you don't have it, otherwise load it. 
 
 ```{r}
 library('dplyr')
+library('ggplot2')
 ```
-4. Load the file ``data1.csv`` into the dataframe ``ads``. 
+4. Load the file ``data1.csv`` into the data frame ``ads``. 
 
 ```{r}
 ads <- read.csv('data1.csv')
@@ -32,18 +36,18 @@ ads <- read.csv('data1.csv')
 
 ## Basic Data Analysis
 
-4. What are the column names of this dataset?
+4. What are the column names of this data frame?
 ```{r}
 colnames(ads)
 ```
 
-5. How may rows does the dataset have?
+5. How may rows does the data frame have?
 ```{r}
 nrow(ads)
 ```
 
 
-6. Give an initial summary of the dataset.
+6. Give an initial summary of the data frame
 ```{r}
 summary(ads)
 ```
@@ -53,7 +57,7 @@ summary(ads)
 sum(ads$conversion)
 ```
 
-8. Filter our all impressions from the ``display`` channel that cost over $1. Save the result in the datatable ``expensive.ads``
+8. Filter our all impressions from the ``display`` channel that cost over $1. Save the result in the data frame ``expensive.ads``
 
 ```{r}
 expensive.ads<- ads[(ads$cost > 1)& (ads$channel=='display'),]
@@ -67,31 +71,67 @@ sum(expensive.ads$cost)
 
 ## Datatable Manipulation
 
-9. Some impression id's are duplicated. Remove the duplicates.
 
-10. Add a column which for each ad represents the profit. Compute the total profit.
+9. Add a column which for each ad represents the profit. Compute the total profit.
 
 ```{r}
 ads$profit <- ads$revenue - ads$cost
 sum(ads$profit)
 ```
 
-11. Create a new dataframe that for each channel shows the total impressions, total conversions, and total cost.
+10. Create a new data frame that for each channel shows the total impressions, total conversions, and total cost.
 
 ```{r}
 channel.per <- ads %>% group_by(channel) %>% summarise(total.impressions=n(), total.conversions=sum(conversion), total.cost=sum(cost))
 print(channel.per)
 ```
 
-12. Something about merging?
+11. Now import ``data2.csv`` into a data frame called ``customers`` and merge ``ads`` and ``customers``  on ``id`` calling the final data frame ``merged``.
+```{r}
+customers <- read.csv('data2.csv')
+merged <- merge(ads,customers,by="id")
+```
+## Analysis
 
-## Modeling
+12. Construct a regression between the age of the customers and spend of a customer. 
+```{r}
+reg1 <- lm(revenue~age, data=merged)
+print(reg1)
+```
+13. What is the $R^2$ of this regression?
+```{r}
+summary(reg1)
+```
 
-10. Something about lm and glm
+14. Using the regression predict the spend of a customer who is 38.
+```{r}
+predict(reg1, newdata = data.frame(age = c(38)))
+```
 
+
+15. Using GLM, construct a regression between the Ad type and the conversions.
+```{r}
+reg2 <- glm(conversion~type, data=merged, family='binomial')
+print(reg2)
+```
+
+16. What coefficients appear in the previous regression? 
+```{r}
+reg2 <- glm(conversion~type, data=merged, family='binomial')
+summary(reg2)
+```
 
 ## Plotting
 
+13. Plot the ages of customers against their revenue along with the regression line you learned above.
+```{r}
+ggplot(merged, aes(age, revenue)) + geom_point()
+```
+14. Plot a histogram on the set of costs.
+
+```{r}
+ggplot(merged, aes(cost)) + geom_histogram(binwidth=.1)
+```
 <!--```{r pressure, echo=FALSE}
 plot(pressure)
 ```
